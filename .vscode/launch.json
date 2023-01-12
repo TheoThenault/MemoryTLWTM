@@ -6,10 +6,18 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "vmArgs": "--module-path /usr/share/openjfx/lib --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "App",
+            "projectName": "MemoryTLWTM_5eaa6dff"
+        },
+        {
+            "type": "java",
             "name": "Launch App",
             "request": "launch",
-            "mainClass": "hellofx.HelloWorld",
-            "vmArgs": "--module-path /home/simon/Documents/Cours_LPro/POO/Projet/MemoryTLWTM/lib --add-modules javafx.controls,javafx.fxml",
+            "vmArgs": "--module-path lib/**/*.jar --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "App"
         }
     ]
 }
