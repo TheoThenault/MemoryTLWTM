@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -96,15 +97,35 @@ public class App extends Application {
             }
             
             //lancement de partie une fois que tous les parametres sont entrés et valide
+           
             Plateau plateau = new Plateau();
 
-            StackPane root = new StackPane();
+            //VBox qui contient les scores de tous les joueurs de la partie en cours
+            VBox scoreVBox = new VBox();
+            scoreVBox.setAlignment(Pos.TOP_RIGHT);
+            scoreVBox.setSpacing(10);
+            scoreVBox.setPadding(new Insets(10));
+
+            //scores contient la liste de tous les scores de la partie en cours
+            ArrayList<Score> scores = new ArrayList<Score>(); 
+            for(int i = 0; i < nbJoueur; i++){
+                scores.add(new Score(nomJoueurs[i].getText()));
+                
+            }
+            scoreVBox.getChildren().addAll(scores);
+
+            HBox root = new HBox();
             root.getChildren().add(plateau);
 
+            root.getChildren().add(scoreVBox);
+
+            
             Scene scene = new Scene(root, 640, 480);
+            stage.setTitle("Mémory");
             stage.setScene(scene);
             stage.setMinWidth(plateau.getMinWidth());
             stage.show();
+
 
         });
 
