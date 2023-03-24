@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -38,20 +41,35 @@ public class App extends Application {
         }
         nomJoueurs[0].setVisible(true);// Le premier est visible car il y a au moins 1 joueur
 
-//Création du champs de saisie pour le nombre de paires de cartes
-        TextField nbPairesTF = new TextField();
-        nbPairesTF.setPromptText("Entrer le nombre de paire pour la partie");
-        nbPairesTF.setPrefColumnCount(20);
-        nbPairesTF.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                nbPairesTF.setText(newValue.replaceAll("[^\\d]", ""));
-                
-            }
-        });
+//Création de la comboBox pour le nombre de paires de cartes
+
+        Label nbPaireLabel = new Label("Choisir le nombre de paire pour la partie");
+        ComboBox<Integer> cBnbPaires = new ComboBox<>();
+        cBnbPaires.getItems().addAll(15,2,18,21,28);
+        cBnbPaires.getSelectionModel().selectFirst();
+
 
 //Création du bouton de validation
-        Button btn = new Button("Lancer la partie");
-        btn.setFont(Font.font("Verdana", 14));
+        Button btnValidation = new Button("Lancer la partie");
+        btnValidation.setFont(Font.font("Verdana", 14));
+
+//Création du bouton Prochain joueur
+        Button btnProchainJoueur = new Button("Joueur suivant");
+        btnProchainJoueur.setFont(Font.font("Verdana", 14));
+
+//Création du bouton pour quitter le jeu
+
+        Button btnQuitte = new Button("Quitter la partie");
+        btnQuitte.setFont(Font.font("Verdana", 14));
+
+
+// Gestion du bouton Prochain joueur
+
+
+// Gestion du bouton Quitter
+        btnQuitte.setOnAction(e ->{
+            stage.close();
+        });
 
 
 // Gestion de la séléction du nombre de joueur
@@ -73,7 +91,7 @@ public class App extends Application {
 
 
 //Gestion du bouton de validation
-        btn.setOnAction(e ->{
+        btnValidation.setOnAction(e ->{
 
             alerte.setText("");// remet le label qui sert d'alerte à zéro des que le bouton et cliqué
 
@@ -84,21 +102,32 @@ public class App extends Application {
                 }
             }
             
-            if(nbPairesTF.getText().equals("")){
-                alerte.setText("Veuillez entrer un nombre de paire");
-                return;
-            }
-
-            nbPaires = Integer.parseInt(nbPairesTF.getText());
-
-            if(nbPaires > 20){
-                alerte.setText("Nombre de paire trop élevé, ne doit pas être suppérieur à 15");
-                return;
-            }
-            
             //lancement de partie une fois que tous les parametres sont entrés et valide
-           
+            
             Plateau plateau = new Plateau();
+
+            switch(cBnbPaires.getValue()){
+
+                case 2:
+                    plateau = new Plateau(2,2);
+                    break;
+
+                case 15:
+                    plateau = new Plateau(5,6);
+                    break;
+
+                case 18:
+                    plateau = new Plateau(6,6);
+                    break;
+
+                case 21:
+                    plateau = new Plateau(6,7);
+                    break;
+
+                case 28:
+                    plateau = new Plateau(8,7);
+                    break;
+            }
 
             //VBox qui contient les scores de tous les joueurs de la partie en cours
             VBox scoreVBox = new VBox();
@@ -112,25 +141,40 @@ public class App extends Application {
                 scores.add(new Score(nomJoueurs[i].getText()));
                 
             }
+            scores.get(0).setStyle("-fx-background-color: red; -fx-border-color: black;");
+            
+            
+            HBox btnHbox = new HBox();
+            btnHbox.setAlignment(Pos.BOTTOM_RIGHT);
+            btnHbox.setSpacing(10);
+            btnHbox.setPadding(new Insets(10));
+
+
+            if(nbJoueur == 1){//Si 1 joueur alors ne doit pas y avoir de bouton pour changer de joueur
+                btnProchainJoueur.setVisible(false);
+            }
+            btnHbox.getChildren().addAll(btnProchainJoueur, btnQuitte);        
+
             scoreVBox.getChildren().addAll(scores);
+            scoreVBox.getChildren().add(btnHbox);
+            
 
             HBox root = new HBox();
             root.getChildren().add(plateau);
+    
 
             root.getChildren().add(scoreVBox);
 
-            
             Scene scene = new Scene(root, 640, 480);
-            stage.setTitle("Mémory");
+            stage.setTitle("Jeu de Memory");
             stage.setScene(scene);
             stage.setMinWidth(plateau.getMinWidth());
             stage.show();
 
-
         });
 
 //Gestion de la fenetre
-        VBox root = new VBox();// Surement ça a changer pour la disposition de la fenetre
+        VBox root = new VBox();
 
         root.setSpacing(10);
         root.setPadding(new Insets(15,20, 10,10));
@@ -151,8 +195,14 @@ public class App extends Application {
         separator.setPrefWidth(root.getWidth());
         root.getChildren().add(separator);
 
-        root.getChildren().add(nbPairesTF);
-        root.getChildren().add(btn);
+
+        HBox hboxNbPaires = new HBox(nbPaireLabel, cBnbPaires);// Permet de mettre cote à cote le label et la comboBox pour le choix du nombre de paire
+        hboxNbPaires.setSpacing(10);
+        hboxNbPaires.setPadding(new Insets(15,20, 10,10));
+        root.getChildren().add(hboxNbPaires);
+
+
+        root.getChildren().add(btnValidation);
 
         root.getChildren().add(alerte);
         
@@ -166,5 +216,6 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
+
 
 }
