@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     
-    public final static int    BUTTON_SIZE = 50;
+    public final static int    BUTTON_SIZE = 100;
 
     @Override
     public void start(Stage stage) {
