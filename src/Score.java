@@ -1,10 +1,11 @@
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-public class Score extends StackPane{//Toutes les infos mais les unes sur les autres car pas encore agancé
+public class Score extends HBox{//Toutes les infos mais les unes sur les autres car pas encore agancé
 
     private String player;
     private int score;
@@ -19,6 +20,8 @@ public class Score extends StackPane{//Toutes les infos mais les unes sur les au
         this.score = score;
         this.player = player;
         this.setPrefSize(150, 50);
+        this.setSpacing(10);
+        this.setPadding(new Insets(10));
         this.setStyle("-fx-border-color: black");
         
         Label playerTexte = new Label(player);
@@ -38,7 +41,7 @@ public class Score extends StackPane{//Toutes les infos mais les unes sur les au
         this.getChildren().addAll(playerTexte, t,playerScore);
 
     }
-
+    
     public Score(String player){
         this(player, scoreParDefaut);
     }
