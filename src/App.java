@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,7 +21,7 @@ public class App extends Application {
     public int nbPaires ;
     private static int currentJoueurIndex = 0;
     private static ArrayList<Score> scores = new ArrayList<Score>(); 
-    private static Boolean plusPetitScore;
+    //private static Boolean plusPetitScore;
 
     @Override
     public void start(Stage stage) {
