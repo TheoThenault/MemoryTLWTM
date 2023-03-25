@@ -1,6 +1,7 @@
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 public class Plateau extends TilePane{
     private Carte cartes[][];
@@ -8,6 +9,7 @@ public class Plateau extends TilePane{
 
     private int lignes   = 5;
     private int colonnes = 6;
+    private VBox scoreVBox = new VBox();
 
     private Carte premiereCarte = null;
     private Carte deuxiemeCarte = null;
@@ -17,11 +19,12 @@ public class Plateau extends TilePane{
         this(5, 6);
     }
 
-    public Plateau(int lines, int columns)
+    public Plateau(int lines, int columns, VBox vBoxScore)
     {
         super();
         lignes = lines;
         colonnes = columns;
+        scoreVBox = vBoxScore;
 
         this.setHgap(2);
         this.setVgap(2);
@@ -42,6 +45,9 @@ public class Plateau extends TilePane{
                 this.getChildren().add(cartes[ligne][colonne]);
             }
         }
+    }
+
+    public Plateau(int i, int j) {
     }
 
     private void initClickHandler()
@@ -66,11 +72,11 @@ public class Plateau extends TilePane{
                             if(c.valeur == premiereCarte.valeur)
                             {
                                 // TODO GAGNER DES POINTS
-                                App.paireTrouvé();
+                                App.paireTrouvé(scoreVBox);
                                 c.supprimer();
                                 premiereCarte.supprimer();
                             }else{
-                                App.paireNonTrouvé();
+                                App.paireNonTrouvé(scoreVBox);
                             }
                         }
                     }else{

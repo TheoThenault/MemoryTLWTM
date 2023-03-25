@@ -23,6 +23,7 @@ public class App extends Application {
     public int nbPaires ;
     private static int currentJoueurIndex = 0;
     private static ArrayList<Score> scores = new ArrayList<Score>(); 
+    private static Boolean plusPetitScore;
 
     @Override
     public void start(Stage stage) {
@@ -63,10 +64,17 @@ public class App extends Application {
         Button btnQuitte = new Button("Quitter la partie");
         btnQuitte.setFont(Font.font("Verdana", 14));
 
+//Création du bouton pour échanger 2 cartes
+
+        Button btnSwap = new Button("Echanger 2 cartes");
+        btnSwap.setId("swap");
+        btnSwap.setFont(Font.font("Verdana", 14));
+        btnSwap.setVisible(false);
+
 
 // Gestion du bouton Prochain joueur
         btnProchainJoueur.setOnAction(e ->{
-            joueurSuivant();
+            joueurSuivant(new VBox());// POur que le bouton marche mais ne vérifie pas si le prochian joueur est le plus faible en point
         });
 
 // Gestion du bouton Quitter
@@ -74,6 +82,12 @@ public class App extends Application {
             stage.close();
         });
 
+// Gestion du bouton échange 2 cartes
+        btnSwap.setOnAction(e ->{
+            //échange
+            btnSwap.setVisible(false);
+            plusPetitScore = false;
+        });
 
 // Gestion de la séléction du nombre de joueur
         Label label = new Label("Choisir le nombre de joueur ");
@@ -115,32 +129,6 @@ public class App extends Application {
 
 
 
-            //lancement de partie une fois que tous les parametres sont entrés et valide
-            
-            Plateau plateau = new Plateau();
-
-            switch(cBnbPaires.getValue()){
-
-                case 2:
-                    plateau = new Plateau(2,2);
-                    break;
-
-                case 15:
-                    plateau = new Plateau(5,6);
-                    break;
-
-                case 18:
-                    plateau = new Plateau(6,6);
-                    break;
-
-                case 21:
-                    plateau = new Plateau(6,7);
-                    break;
-
-                case 28:
-                    plateau = new Plateau(8,7);
-                    break;
-            }
 
             //VBox qui contient les scores de tous les joueurs de la partie en cours
             VBox scoreVBox = new VBox();
@@ -160,10 +148,41 @@ public class App extends Application {
             if(nbJoueur == 1){//Si 1 joueur alors ne doit pas y avoir de bouton pour changer de joueur
                 btnProchainJoueur.setVisible(false);
             }
+
             btnHbox.getChildren().addAll(btnProchainJoueur, btnQuitte);        
 
             scoreVBox.getChildren().addAll(scores);
-            scoreVBox.getChildren().add(btnHbox);
+            scoreVBox.getChildren().addAll(btnHbox, btnSwap);
+
+
+            //lancement de partie une fois que tous les parametres sont entrés et valides
+            
+            Plateau plateau = new Plateau();
+
+            switch(cBnbPaires.getValue()){
+
+                case 2:
+                    plateau = new Plateau(2,2,scoreVBox);//peut être mettre scorevbox dedans pour -> pairetrouvé et nontrouvé -> joueur suivant changer bouton
+                    break;
+
+                case 15:
+                    plateau = new Plateau(5,6,scoreVBox);
+                    break;
+
+                case 18:
+                    plateau = new Plateau(6,6,scoreVBox);
+                    break;
+
+                case 21:
+                    plateau = new Plateau(6,7,scoreVBox);
+                    break;
+
+                case 28:
+                    plateau = new Plateau(8,7,scoreVBox);
+                    break;
+            }
+
+            
             
 
             HBox root = new HBox();
@@ -224,7 +243,7 @@ public class App extends Application {
         launch();
     }
 
-    private static void joueurSuivant(){
+    private static void joueurSuivant(VBox vbox){
         currentJoueurIndex ++;
         if (currentJoueurIndex >= nbJoueur){
             currentJoueurIndex = 0;
@@ -237,18 +256,35 @@ public class App extends Application {
         //mettre le fond en jaune du joueur actuel
         scores.get(currentJoueurIndex).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
+        if(currentJoueurIndex == plusPetitScoreIndex() && scores.get(plusPetitScoreIndex()).getScore() > 0){
+            plusPetitScore = true; //TODO penser à le remttre à false apres le swap de 2 cartes
+            //mettre la visibilité du bouton à true
+            vbox.lookup("#swap").setVisible(true);
+        }
+
         System.out.println("Tour de " + scores.get(currentJoueurIndex).getName());
     }
 
-    public static void paireTrouvé(){
+    public static void paireTrouvé(VBox vbox){
        scores.get(currentJoueurIndex).addScore(1);
        //mettre à jour l'affichage du score pour ce joueur
-       joueurSuivant(); 
+       joueurSuivant(vbox); 
     }
 
-    public static void paireNonTrouvé(){
-        joueurSuivant();
+    public static void paireNonTrouvé(VBox vbox){
+        joueurSuivant(vbox);
     }
 
+    public static int plusPetitScoreIndex(){
+        int min = scores.get(0).getScore();
+        int indexJoueurPetitScore = 0;
+        for( int i = 1; i < nbJoueur; i++){
+            if( scores.get(i).getScore() < min){
+                min = scores.get(i).getScore();
+                indexJoueurPetitScore = i;
+            }
+        }
+        return indexJoueurPetitScore;
+    }
 
 }
