@@ -21,7 +21,7 @@ public class App extends Application {
     public int nbPaires ;
     private static int currentJoueurIndex = 0;
     private static ArrayList<Score> scores = new ArrayList<Score>(); 
-    private static Boolean plusPetitScore;
+    //private static Boolean plusPetitScore;
     public static boolean swapMode = false;
     private static Plateau plateau;
     public VBox scoreVBox;
@@ -95,7 +95,7 @@ public class App extends Application {
             plateau.premiereCarte = null;
             plateau.deuxiemeCarte = null;
             btnSwap.setVisible(false);
-            plusPetitScore = false;
+            //plusPetitScore = false;
         });
 
 // Gestion de la séléction du nombre de joueur
@@ -275,11 +275,11 @@ public class App extends Application {
                 count++;
         }
         if(currentJoueurIndex == plusPetitScoreIndex() && count == 1 && nbJoueur > 1){
-            plusPetitScore = true; //TODO penser à le remttre à false apres le swap de 2 cartes
+            //plusPetitScore = true; //TODO penser à le remttre à false apres le swap de 2 cartes
             //mettre la visibilité du bouton à true
             vbox.lookup("#swap").setVisible(true);
         }else{
-            plusPetitScore = false;
+            //plusPetitScore = false;
             vbox.lookup("#swap").setVisible(false);
         }
 
