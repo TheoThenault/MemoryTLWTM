@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
+import javax.lang.model.element.Element;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -20,8 +19,10 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     public final static int    BUTTON_SIZE = 50;
-    public static int nbJoueur = 1;
-    public static int nbPaires ;
+    public int nbJoueur = 1;
+    public int nbPaires ;
+    private int currentJoueurIndex = 0;
+    private ArrayList<Score> scores = new ArrayList<Score>(); 
 
     @Override
     public void start(Stage stage) {
@@ -64,7 +65,9 @@ public class App extends Application {
 
 
 // Gestion du bouton Prochain joueur
-
+        btnProchainJoueur.setOnAction(e ->{
+            joueurSuivant();
+        });
 
 // Gestion du bouton Quitter
         btnQuitte.setOnAction(e ->{
@@ -136,12 +139,11 @@ public class App extends Application {
             scoreVBox.setPadding(new Insets(10));
 
             //scores contient la liste de tous les scores de la partie en cours
-            ArrayList<Score> scores = new ArrayList<Score>(); 
             for(int i = 0; i < nbJoueur; i++){
                 scores.add(new Score(nomJoueurs[i].getText()));
                 
             }
-            scores.get(0).setStyle("-fx-background-color: red; -fx-border-color: black;");
+            scores.get(0).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
             
             
             HBox btnHbox = new HBox();
@@ -215,6 +217,22 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    private void joueurSuivant(){
+        currentJoueurIndex ++;
+        if (currentJoueurIndex >= nbJoueur){
+            currentJoueurIndex = 0;
+        }
+        //reset le fond de tous les joueurs
+        scores.forEach(elt->{
+            elt.setStyle("-fx-border-color: black;");
+        });
+
+        //mettre le fond en jaune du joueur actuel
+        scores.get(currentJoueurIndex).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
+
+        System.out.println("Tour de " + scores.get(currentJoueurIndex).getName());
     }
 
 
