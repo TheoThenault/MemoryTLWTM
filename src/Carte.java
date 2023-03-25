@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.List;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -36,6 +37,33 @@ public class Carte extends Button {
         image = new CarteBackground(list_noms[val%list_noms.length]);
         
         unselect();
+    }
+
+    //faire un autre constructeur de carte avec les cartes choisi par l'utilisateur
+    public Carte(String arg, int val, List<File> list)
+    {
+        super(arg);
+        valeur = val;
+        this.setPrefWidth(App.BUTTON_SIZE);
+        this.setPrefHeight(App.BUTTON_SIZE);
+        this.setPadding(new Insets(0));
+        this.setContentDisplay(ContentDisplay.TOP);
+
+        this.setText("");
+        
+        String[] list_noms = new String[list.size()];
+        int indexNoms = 0;
+        for(int i = 0; i < list.size(); i++)
+        {
+            String n = list.get(i).getName();
+            if(n.equals("arriere.png") == false)
+            {
+                list_noms[indexNoms++] = n;
+            }
+        }
+        image = new CarteBackground(list_noms[val%list_noms.length]);
+        
+        select();
     }
 
     public void select()

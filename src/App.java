@@ -1,4 +1,12 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -12,24 +20,26 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class App extends Application {
 
     public final static int    BUTTON_SIZE = 80;
     public static int nbJoueur = 1;
-    public int nbPaires ;
+    public int nbPaires = 15;
+    public List<File> fichierChoisi;
+    public Label alerte;
     private static int currentJoueurIndex = 0;
     private static ArrayList<Score> scores = new ArrayList<Score>(); 
-    //private static Boolean plusPetitScore;
     public static boolean swapMode = false;
     private static Plateau plateau;
     public VBox scoreVBox;
 
     @Override
     public void start(Stage stage) {
-
-        Label alerte = new Label();
+        alerte = new Label();
         alerte.setFont(Font.font("Verdana", 16));
         alerte.setStyle("-fx-font-weight: bold");
         
@@ -72,7 +82,36 @@ public class App extends Application {
         btnSwap.setFont(Font.font("Verdana", 14));
         btnSwap.setVisible(false);
 
+//Création du bouton pour la bibliotheque d'image
 
+        Button btnAjouterImage = new Button("Choisir des cartes à ajouter");
+        btnAjouterImage.setFont(Font.font("Verdana", 14));
+
+//Création du bouton pour choisir les images à utiliser
+
+        Button btnChoisirImages = new Button("Choisir les cartes pour la partie");
+        btnChoisirImages.setFont(Font.font("Verdana", 14));
+
+
+//Gestion de la combobox nbpaire
+
+        cBnbPaires.setOnAction(event -> {
+            nbPaires = cBnbPaires.getValue();
+        });
+
+//Gestion du bouton choisir image
+
+        btnChoisirImages.setOnAction(e-> {
+            choisirImages();
+        });
+
+//Gestion du bouton Biblio
+
+        btnAjouterImage.setOnAction(e ->{
+            ajoutImage();
+        });
+
+        
 // Gestion du bouton Prochain joueur
         btnProchainJoueur.setOnAction(e ->{
             if(plateau.premiereCarte != null && plateau.deuxiemeCarte != null)
@@ -95,7 +134,6 @@ public class App extends Application {
             plateau.premiereCarte = null;
             plateau.deuxiemeCarte = null;
             btnSwap.setVisible(false);
-            //plusPetitScore = false;
         });
 
 // Gestion de la séléction du nombre de joueur
@@ -135,18 +173,12 @@ public class App extends Application {
             }
             scores.get(0).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
-
-
-
             //VBox qui contient les scores de tous les joueurs de la partie en cours
             scoreVBox = new VBox();
             scoreVBox.setAlignment(Pos.TOP_RIGHT);
             scoreVBox.setSpacing(10);
             scoreVBox.setPadding(new Insets(10));
-
-            
-            
-            
+         
             HBox btnHbox = new HBox();
             btnHbox.setAlignment(Pos.BOTTOM_RIGHT);
             btnHbox.setSpacing(10);
@@ -170,33 +202,30 @@ public class App extends Application {
             switch(cBnbPaires.getValue()){
 
                 case 2:
-                    plateau = new Plateau(2,2,scoreVBox);//peut être mettre scorevbox dedans pour -> pairetrouvé et nontrouvé -> joueur suivant changer bouton
+                    plateau = new Plateau(2,2,scoreVBox, fichierChoisi);
                     break;
 
                 case 15:
-                    plateau = new Plateau(5,6,scoreVBox);
+                    plateau = new Plateau(5,6,scoreVBox, fichierChoisi);
                     break;
 
                 case 18:
-                    plateau = new Plateau(6,6,scoreVBox);
+                    plateau = new Plateau(6,6,scoreVBox, fichierChoisi);
                     break;
 
                 case 21:
-                    plateau = new Plateau(6,7,scoreVBox);
+                    plateau = new Plateau(6,7,scoreVBox, fichierChoisi);
                     break;
 
                 case 28:
-                    plateau = new Plateau(8,7,scoreVBox);
+                    plateau = new Plateau(8,7,scoreVBox, fichierChoisi);
                     break;
             }
 
-            
-            
 
             HBox root = new HBox();
             root.getChildren().add(plateau);
     
-
             root.getChildren().add(scoreVBox);
 
             Scene scene = new Scene(root, 
@@ -238,11 +267,11 @@ public class App extends Application {
         root.getChildren().add(hboxNbPaires);
 
 
-        root.getChildren().add(btnValidation);
+        root.getChildren().addAll(btnValidation, btnAjouterImage, btnChoisirImages);
 
         root.getChildren().add(alerte);
         
-        Scene scene = new Scene(root, 500, 400);
+        Scene scene = new Scene(root, 500, 450);
  
         stage.setTitle("Parametre de la partie");
         stage.setScene(scene);
@@ -275,11 +304,9 @@ public class App extends Application {
                 count++;
         }
         if(currentJoueurIndex == plusPetitScoreIndex() && count == 1 && nbJoueur > 1){
-            //plusPetitScore = true; //TODO penser à le remttre à false apres le swap de 2 cartes
             //mettre la visibilité du bouton à true
             vbox.lookup("#swap").setVisible(true);
         }else{
-            //plusPetitScore = false;
             vbox.lookup("#swap").setVisible(false);
         }
 
@@ -312,6 +339,62 @@ public class App extends Application {
             }
         }
         return indexJoueurPetitScore;
+    }
+
+    public void ajoutImage(){
+
+        FileChooser fileChooser = new FileChooser();
+
+        // Définir le titre de la fenêtre
+        fileChooser.setTitle("Choisir des images");
+
+        // Ajouter des filtres pour ne montrer que certains types de fichiers
+        fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif")
+        );
+
+        // Afficher la fenêtre de choix de fichier
+        File fichierChoisi = fileChooser.showOpenDialog(new Stage());
+
+        // Récupérer le chemin de l'image sélectionné
+        if (fichierChoisi != null) {
+            Path chemin = fichierChoisi.toPath();
+            System.out.println("Fichier sélectionné : " + chemin);
+            try {
+                Files.copy(chemin,Paths.get("img/" + chemin.getFileName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void choisirImages(){
+
+        FileChooser fileChooser = new FileChooser();
+
+
+        // Définir le titre de la fenêtre
+        fileChooser.setTitle("Choisir des images, " + nbPaires);
+
+        //detecter le nombre d'images à mettre 
+
+        // Ajouter des filtres pour ne montrer que certains types de fichiers
+        fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif")
+        );
+        fileChooser.setInitialDirectory(new File("img"));
+
+        // Afficher la fenêtre de choix de fichier
+        fichierChoisi = fileChooser.showOpenMultipleDialog(new Stage());
+
+        // Récupérer le chemin des images sélectionnées
+        
+        //Vérification du nombre d'images
+        if(fichierChoisi != null && fichierChoisi.size() < nbPaires){
+            alerte.setText("Nombre d'image trop petit");
+        }else if(fichierChoisi != null && fichierChoisi.size() > nbPaires){
+            alerte.setText("Nombre d'image trop grand");
+        }
     }
 
 }
