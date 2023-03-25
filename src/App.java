@@ -1,4 +1,13 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -12,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -69,7 +79,18 @@ public class App extends Application {
         btnSwap.setFont(Font.font("Verdana", 14));
         btnSwap.setVisible(false);
 
+//Création du bouton pour la bibliotheque d'image
 
+        Button btnAjouterImage = new Button("Choisir des cartes à ajouter");
+        btnAjouterImage.setFont(Font.font("Verdana", 14));
+
+//Gestion du bouton Biblio
+
+        btnAjouterImage.setOnAction(e ->{
+            ajoutImage();
+        });
+
+        
 // Gestion du bouton Prochain joueur
         btnProchainJoueur.setOnAction(e ->{
             joueurSuivant(new VBox());// POur que le bouton marche mais ne vérifie pas si le prochian joueur est le plus faible en point
@@ -229,6 +250,8 @@ public class App extends Application {
 
         root.getChildren().add(btnValidation);
 
+        root.getChildren().add(btnAjouterImage);
+
         root.getChildren().add(alerte);
         
         Scene scene = new Scene(root, 500, 400);
@@ -284,6 +307,36 @@ public class App extends Application {
             }
         }
         return indexJoueurPetitScore;
+    }
+
+    public void ajoutImage(){
+
+        FileChooser fileChooser = new FileChooser();
+
+            // Définir le titre de la fenêtre
+            fileChooser.setTitle("Choisir des images");
+
+            // Ajouter des filtres pour ne montrer que certains types de fichiers
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Choisir des images", "*.jpg"),
+                new FileChooser.ExtensionFilter("Choisir des images", "*.jpeg"),
+                new FileChooser.ExtensionFilter("Choisir des images", "*.png"),
+                new FileChooser.ExtensionFilter("Choisir des images", "*.gif")
+            );
+
+            // Afficher la fenêtre de choix de fichier
+            File fichierChoisi = fileChooser.showOpenDialog(new Stage());
+
+            // Récupérer le chemin du fichier sélectionné
+            if (fichierChoisi != null) {
+                Path chemin = fichierChoisi.toPath();
+                System.out.println("Fichier sélectionné : " + chemin);
+                try {
+                    Files.copy(chemin,Paths.get("img/" + chemin.getFileName()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 
 }
