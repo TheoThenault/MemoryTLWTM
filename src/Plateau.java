@@ -59,6 +59,11 @@ public class Plateau extends TilePane{
                 {
                     premiereCarte = c;
                     premiereCarte.select();
+                    if(c.getOpacity() == 0.0){// vérifie si la carte séléctionné n'a pas deja été trouvée
+                        premiereCarte.unselect();
+                        premiereCarte = null;
+                        return;
+                    }
                 }else{
                     if(deuxiemeCarte == null)
                     {
@@ -66,6 +71,11 @@ public class Plateau extends TilePane{
                         {
                             deuxiemeCarte = c;
                             deuxiemeCarte.select();
+                            if(c.getOpacity() == 0.0){// vérifie si la carte séléctionné n'a pas deja été trouvée
+                                deuxiemeCarte.unselect();  
+                                deuxiemeCarte = null;
+                                return;
+                            }
                             if(c.valeur == premiereCarte.valeur)
                             {
                                 // TODO GAGNER DES POINTS
