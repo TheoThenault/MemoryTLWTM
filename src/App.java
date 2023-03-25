@@ -256,7 +256,7 @@ public class App extends Application {
         //mettre le fond en jaune du joueur actuel
         scores.get(currentJoueurIndex).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
-        if(currentJoueurIndex == plusPetitScoreIndex() && scores.get(plusPetitScoreIndex()).getScore() > 0){
+        if(currentJoueurIndex == plusPetitScoreIndex() && scores.get(plusPetitScoreIndex()).getScore() > 0 && nbJoueur > 1){
             plusPetitScore = true; //TODO penser à le remttre à false apres le swap de 2 cartes
             //mettre la visibilité du bouton à true
             vbox.lookup("#swap").setVisible(true);
@@ -278,7 +278,7 @@ public class App extends Application {
     public static int plusPetitScoreIndex(){
         int min = scores.get(0).getScore();
         int indexJoueurPetitScore = 0;
-        for( int i = 1; i < nbJoueur; i++){
+        for( int i = 0; i < nbJoueur; i++){
             if( scores.get(i).getScore() < min){
                 min = scores.get(i).getScore();
                 indexJoueurPetitScore = i;
