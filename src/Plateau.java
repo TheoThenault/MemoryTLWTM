@@ -7,8 +7,6 @@ public class Plateau extends TilePane{
     private Carte cartes[][];
     private EventHandler<MouseEvent> clickHandler;
 
-    private int lignes   = 5;
-    private int colonnes = 6;
     private VBox scoreVBox = new VBox();
 
     private Carte premiereCarte = null;
@@ -22,8 +20,7 @@ public class Plateau extends TilePane{
     public Plateau(int lines, int columns, VBox vBoxScore)
     {
         super();
-        lignes = lines;
-        colonnes = columns;
+
         scoreVBox = vBoxScore;
 
         this.setHgap(2);

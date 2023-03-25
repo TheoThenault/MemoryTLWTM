@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-    public final static int    BUTTON_SIZE = 50;
+    public final static int    BUTTON_SIZE = 150;
     public static int nbJoueur = 1;
     public int nbPaires ;
     private static int currentJoueurIndex = 0;
