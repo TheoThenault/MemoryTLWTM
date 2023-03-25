@@ -10,6 +10,8 @@ public class Score extends HBox{//Toutes les infos mais les unes sur les autres 
     private String player;
     private int score;
 
+    private Label playerScore;
+
     private static int scoreParDefaut = 0;
 
     public Score(){
@@ -28,7 +30,7 @@ public class Score extends HBox{//Toutes les infos mais les unes sur les autres 
         playerTexte.setStyle("-fx-border-color: black");
     
 
-        Label playerScore = new Label(Integer.toString(score));
+        playerScore = new Label(Integer.toString(score));
         playerScore.setStyle("-fx-border-color: black");
 
         Text t = new Text("Score");
@@ -48,14 +50,17 @@ public class Score extends HBox{//Toutes les infos mais les unes sur les autres 
 
     public void addScore(){
         this.score = this.score + 1;
+        playerScore.setText(Integer.toString(this.score));
     }
 
     public void addScore(int x){
         this.score = this.score + x;
+        playerScore.setText(Integer.toString(this.score));
     }
 
     public void setScore(int x){
         this.score = x;
+        playerScore.setText(Integer.toString(this.score));
     }
 
     public String getName(){
