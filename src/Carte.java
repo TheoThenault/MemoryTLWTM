@@ -38,6 +38,34 @@ public class Carte extends Button {
         select();
     }
 
+    //faire un autre constructeur de carte avec les cartes choisi par l'utilisateur
+    // public Carte(String arg, int val)
+    // {
+    //     super(arg);
+    //     valeur = val;
+    //     this.setPrefWidth(App.BUTTON_SIZE);
+    //     this.setPrefHeight(App.BUTTON_SIZE);
+    //     this.setPadding(new Insets(0));
+    //     this.setContentDisplay(ContentDisplay.TOP);
+
+    //     this.setText("");
+        
+    //     File[] list = CarteBackground.imageFolder.listFiles();// mettre la liste ici
+    //     String[] list_noms = new String[list.length-1];
+    //     int indexNoms = 0;
+    //     for(int i = 0; i < list.length; i++)
+    //     {
+    //         String n = list[i].getName();
+    //         if(n.equals("arriere.png") == false)
+    //         {
+    //             list_noms[indexNoms++] = n;
+    //         }
+    //     }
+    //     image = new CarteBackground(list_noms[val%list_noms.length]);
+        
+    //     select();
+    // }
+
     public void select()
     {
         this.setBackground(image.get());

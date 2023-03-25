@@ -84,6 +84,11 @@ public class App extends Application {
         Button btnAjouterImage = new Button("Choisir des cartes à ajouter");
         btnAjouterImage.setFont(Font.font("Verdana", 14));
 
+//Création du bouton pour choisir les images à utiliser
+
+        Button btnChoisirImages = new Button("Choisir les cartes pour la partie");
+        btnChoisirImages.setFont(Font.font("Verdana", 14));
+
 //Gestion du bouton Biblio
 
         btnAjouterImage.setOnAction(e ->{
@@ -248,9 +253,7 @@ public class App extends Application {
         root.getChildren().add(hboxNbPaires);
 
 
-        root.getChildren().add(btnValidation);
-
-        root.getChildren().add(btnAjouterImage);
+        root.getChildren().addAll(btnValidation, btnAjouterImage, btnChoisirImages);
 
         root.getChildren().add(alerte);
         
