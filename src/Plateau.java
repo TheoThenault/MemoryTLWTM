@@ -12,8 +12,9 @@ public class Plateau extends TilePane{
     public int mColumn;
     public int mLigne;
 
-    private Carte premiereCarte = null;
-    private Carte deuxiemeCarte = null;
+    public Carte premiereCarte = null;
+    public Carte deuxiemeCarte = null;
+    public boolean playerChanged = true;
 
     public Plateau()
     {
@@ -73,6 +74,17 @@ public class Plateau extends TilePane{
     public Plateau(int i, int j) {
     }
 
+    private void swap(Carte a, Carte b)
+    {
+        int v = a.valeur;
+        a.valeur = b.valeur;
+        b.valeur = v;
+
+        CarteBackground c = a.image;
+        a.image = b.image;
+        b.image = c;
+    }
+
     private void initClickHandler()
     {
         clickHandler = new EventHandler<MouseEvent>() {
@@ -81,50 +93,46 @@ public class Plateau extends TilePane{
             public void handle(MouseEvent arg0) {
                 Carte c = (Carte)arg0.getSource();
 
+                if(playerChanged)
+                {
+                    if(premiereCarte != null)
+                        premiereCarte.unselect();
+                    if(deuxiemeCarte != null)
+                        deuxiemeCarte.unselect();
+
+                    premiereCarte = null;
+                    deuxiemeCarte = null;
+                    playerChanged = false;
+                }
+
                 if(premiereCarte == null)
                 {
-                    premiereCarte = c;
-                    premiereCarte.select();
-                    if(c.getOpacity() == 0.0){// vérifie si la carte séléctionné n'a pas deja été trouvée
-                        premiereCarte.unselect();
-                        premiereCarte = null;
-                        return;
-                    }
-                }else{
-                    if(deuxiemeCarte == null)
+                    premiereCarte = c;  
+                    if(!App.swapMode) 
+                        premiereCarte.select();
+                }else if(c != premiereCarte && deuxiemeCarte == null){ 
+                    deuxiemeCarte = c;
+                    deuxiemeCarte.select();
+
+                    if(App.swapMode)
                     {
-                        if(c != premiereCarte)
-                        {
-                            deuxiemeCarte = c;
-                            deuxiemeCarte.select();
-                            if(c.getOpacity() == 0.0){// vérifie si la carte séléctionné n'a pas deja été trouvée
-                                deuxiemeCarte.unselect();  
-                                deuxiemeCarte = null;
-                                return;
-                            }
-                            if(c.valeur == premiereCarte.valeur)
-                            {
-                                // TODO GAGNER DES POINTS
-                                App.paireTrouvé(scoreVBox);
-                                c.supprimer();
-                                premiereCarte.supprimer();
-                            }else{
-                                App.paireNonTrouvé(scoreVBox);
-                            }
-                        }
+                        swap(premiereCarte, deuxiemeCarte);
+                        premiereCarte.unselect();
+                        deuxiemeCarte.unselect();
+                        App.swapMode = false;
                     }else{
-
-                        deuxiemeCarte.unselect();  
-                        deuxiemeCarte = null;
-                        
-                        premiereCarte.unselect();  
-                        premiereCarte = c;
-                        premiereCarte.select(); 
-
+                        if(premiereCarte.valeur == deuxiemeCarte.valeur)
+                        {
+                            premiereCarte.supprimer();
+                            deuxiemeCarte.supprimer();
+                            App.paireTrouvé(scoreVBox);
+                        }else{
+                            App.paireNonTrouvé(scoreVBox);
+                        }
                     }
                 }
+
             }
-            
         };
     }
 }
