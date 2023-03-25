@@ -1,15 +1,18 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
+import java.net.URISyntaxException;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 
 public class Carte extends Button {
 
     public int valeur;
-    private ImageView img;
+    private Image img;
 
     public Carte(String arg, int val)
     {
@@ -19,15 +22,18 @@ public class Carte extends Button {
         this.setPrefHeight(App.BUTTON_SIZE);
 
         try {
-            img = new ImageView(new Image(new FileInputStream("/home/theo/Projets/MemoryTLWTM/img/capyu.jpeg")));
-        } catch (FileNotFoundException e) {
+            img = new Image(this.getClass().getResource("capyu.jpeg").toURI().toString());
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        img.setFitHeight(App.BUTTON_SIZE);
-        img.setPreserveRatio(true);
+        BackgroundImage bImage = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, 
+            BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+            new BackgroundSize(this.getWidth(), this.getHeight(), true, true, true, false));
 
-        this.setGraphic(img);
+        Background backGround = new Background(bImage);
+        this.setBackground(backGround);
+        this.setPadding(new Insets(0));
         this.setContentDisplay(ContentDisplay.TOP);
 
         unselect();
