@@ -9,6 +9,9 @@ public class Plateau extends TilePane{
 
     private VBox scoreVBox = new VBox();
 
+    public int mColumn;
+    public int mLigne;
+
     private Carte premiereCarte = null;
     private Carte deuxiemeCarte = null;
 
@@ -20,7 +23,8 @@ public class Plateau extends TilePane{
     public Plateau(int lines, int columns, VBox vBoxScore)
     {
         super();
-
+        mLigne = lines;
+        mColumn = columns;
         scoreVBox = vBoxScore;
 
         this.setHgap(2);
@@ -31,13 +35,35 @@ public class Plateau extends TilePane{
 
         this.initClickHandler();
 
+        int[][] valeurs = new int[lines][];
+        for(int ligne = 0; ligne < lines; ligne++)
+        {
+            valeurs[ligne] = new int[columns];
+            for(int colonne = 0; colonne < columns; colonne++)
+            {
+                valeurs[ligne][colonne] = (int) Math.floor(ligne* ((int)Math.ceil(columns/2)) + colonne / 2);
+            }
+        }
+        for(int ligne = 0; ligne < lines; ligne++)
+        {
+            for(int colonne = 0; colonne < columns; colonne++)
+            {
+                int newLin = (int) (Math.random() * lines);
+                int newCol = (int) (Math.random() * columns);
+                
+                int inter = valeurs[ligne][colonne];
+                valeurs[ligne][colonne] = valeurs[newLin][newCol];
+                valeurs[newLin][newCol] = inter;
+            }
+        }
+
         cartes = new Carte[lines][];
         for(int ligne = 0; ligne < lines; ligne++)
         {
             cartes[ligne] = new Carte[columns];
             for(int colonne = 0; colonne < columns; colonne++)
             {
-                cartes[ligne][colonne] = new Carte(ligne + " " + colonne, ligne + colonne);
+                cartes[ligne][colonne] = new Carte(ligne + " " + colonne, valeurs[ligne][colonne]);
                 cartes[ligne][colonne].setOnMouseClicked(clickHandler);
                 this.getChildren().add(cartes[ligne][colonne]);
             }

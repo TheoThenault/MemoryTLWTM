@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-    public final static int    BUTTON_SIZE = 150;
+    public final static int    BUTTON_SIZE = 80;
     public static int nbJoueur = 1;
     public int nbPaires ;
     private static int currentJoueurIndex = 0;
@@ -106,7 +106,6 @@ public class App extends Application {
             }  
         });
 
-
 //Gestion du bouton de validation
         btnValidation.setOnAction(e ->{
 
@@ -158,7 +157,7 @@ public class App extends Application {
             //lancement de partie une fois que tous les parametres sont entrés et valides
             
             Plateau plateau = new Plateau();
-
+ 
             switch(cBnbPaires.getValue()){
 
                 case 2:
@@ -191,7 +190,9 @@ public class App extends Application {
 
             root.getChildren().add(scoreVBox);
 
-            Scene scene = new Scene(root, 640, 480);
+            Scene scene = new Scene(root, 
+                plateau.mColumn*App.BUTTON_SIZE + 325, 
+                plateau.mLigne*App.BUTTON_SIZE + 20);
             stage.setTitle("Jeu de Memory");
             stage.setScene(scene);
             stage.setMinWidth(plateau.getMinWidth());
