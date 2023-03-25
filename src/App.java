@@ -33,6 +33,9 @@ public class App extends Application {
     public Label alerte;
     private static int currentJoueurIndex = 0;
     private static ArrayList<Score> scores = new ArrayList<Score>(); 
+    public static boolean swapMode = false;
+    private static Plateau plateau;
+    public VBox scoreVBox;
 
     @Override
     public void start(Stage stage) {
@@ -111,7 +114,10 @@ public class App extends Application {
         
 // Gestion du bouton Prochain joueur
         btnProchainJoueur.setOnAction(e ->{
-            joueurSuivant(new VBox());// POur que le bouton marche mais ne vérifie pas si le prochian joueur est le plus faible en point
+            if(plateau.premiereCarte != null && plateau.deuxiemeCarte != null)
+            {
+                joueurSuivant(scoreVBox);// Pour que le bouton marche mais ne vérifie pas si le prochian joueur est le plus faible en point
+            }
         });
 
 // Gestion du bouton Quitter
@@ -122,6 +128,11 @@ public class App extends Application {
 // Gestion du bouton échange 2 cartes
         btnSwap.setOnAction(e ->{
             //échange
+            swapMode = true;
+            plateau.premiereCarte.unselect();
+            plateau.deuxiemeCarte.unselect();
+            plateau.premiereCarte = null;
+            plateau.deuxiemeCarte = null;
             btnSwap.setVisible(false);
         });
 
@@ -163,7 +174,7 @@ public class App extends Application {
             scores.get(0).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
             //VBox qui contient les scores de tous les joueurs de la partie en cours
-            VBox scoreVBox = new VBox();
+            scoreVBox = new VBox();
             scoreVBox.setAlignment(Pos.TOP_RIGHT);
             scoreVBox.setSpacing(10);
             scoreVBox.setPadding(new Insets(10));
@@ -186,7 +197,7 @@ public class App extends Application {
 
             //lancement de partie une fois que tous les parametres sont entrés et valides
             
-            Plateau plateau = new Plateau();
+            plateau = new Plateau();
  
             switch(cBnbPaires.getValue()){
 
@@ -272,6 +283,8 @@ public class App extends Application {
     }
 
     private static void joueurSuivant(VBox vbox){
+        App.swapMode = false;
+
         currentJoueurIndex ++;
         if (currentJoueurIndex >= nbJoueur){
             currentJoueurIndex = 0;
@@ -284,22 +297,36 @@ public class App extends Application {
         //mettre le fond en jaune du joueur actuel
         scores.get(currentJoueurIndex).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
-        if(currentJoueurIndex == plusPetitScoreIndex() && scores.get(plusPetitScoreIndex()).getScore() > 0 && nbJoueur > 1){
+        int min = scores.get(plusPetitScoreIndex()).getScore();
+        int count = 0;
+        for (Score s : scores) {
+            if(s.getScore() == min)
+                count++;
+        }
+        if(currentJoueurIndex == plusPetitScoreIndex() && count == 1 && nbJoueur > 1){
             //mettre la visibilité du bouton à true
             vbox.lookup("#swap").setVisible(true);
+        }else{
+            vbox.lookup("#swap").setVisible(false);
         }
 
+        plateau.premiereCarte.unselect();
+        plateau.deuxiemeCarte.unselect();
+        plateau.premiereCarte = null;
+        plateau.deuxiemeCarte = null;
+
+        plateau.playerChanged = true;
         System.out.println("Tour de " + scores.get(currentJoueurIndex).getName());
     }
 
     public static void paireTrouvé(VBox vbox){
        scores.get(currentJoueurIndex).addScore(1);
        //mettre à jour l'affichage du score pour ce joueur
-       joueurSuivant(vbox); 
+       //joueurSuivant(vbox); 
     }
 
     public static void paireNonTrouvé(VBox vbox){
-        joueurSuivant(vbox);
+        //joueurSuivant(vbox);
     }
 
     public static int plusPetitScoreIndex(){

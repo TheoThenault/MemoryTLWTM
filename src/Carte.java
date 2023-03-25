@@ -10,7 +10,7 @@ public class Carte extends Button {
     public int valeur;
 
     private static CarteBackground arriere = new CarteBackground("arriere.png");
-    private        CarteBackground image   = null;
+    public         CarteBackground image   = null;
 
     public Carte(String arg, int val)
     {
@@ -36,7 +36,7 @@ public class Carte extends Button {
         }
         image = new CarteBackground(list_noms[val%list_noms.length]);
         
-        select();
+        unselect();
     }
 
     //faire un autre constructeur de carte avec les cartes choisi par l'utilisateur
