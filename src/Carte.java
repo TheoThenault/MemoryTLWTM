@@ -35,7 +35,7 @@ public class Carte extends Button {
         }
         image = new CarteBackground(list_noms[val%list_noms.length]);
         
-        select();
+        unselect();
     }
 
     public void select()
