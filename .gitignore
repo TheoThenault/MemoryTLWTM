@@ -24,5 +24,10 @@ hs_err_pid*
 
 .vscode/*
 .vscode/
+
+img/*.gif
+img/*.jpeg
+
+
 lib/
 bin/

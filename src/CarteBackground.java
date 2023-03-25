@@ -11,7 +11,7 @@ import javafx.scene.layout.BackgroundSize;
 
 public class CarteBackground {
 
-    private static final File imageFolder = new File("img"); 
+    public  static final File imageFolder = new File("img"); 
     private static ArrayList<CarteBackground> liste = new ArrayList<CarteBackground>();
 
     private String          nom   = null;

@@ -1,3 +1,5 @@
+import java.io.File;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -20,7 +22,18 @@ public class Carte extends Button {
 
         this.setText("");
         
-        image = new CarteBackground("goat.gif");
+        File[] list = CarteBackground.imageFolder.listFiles();
+        String[] list_noms = new String[list.length-1];
+        int indexNoms = 0;
+        for(int i = 0; i < list.length; i++)
+        {
+            String n = list[i].getName();
+            if(n.equals("arriere.png") == false)
+            {
+                list_noms[indexNoms++] = n;
+            }
+        }
+        image = new CarteBackground(list_noms[val%list_noms.length]);
         
         unselect();
     }
@@ -34,7 +47,6 @@ public class Carte extends Button {
     {
         this.setBackground(arriere.get());
     }
-
 
     public void supprimer()
     {
