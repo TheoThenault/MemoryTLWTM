@@ -12,11 +12,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -36,9 +39,11 @@ public class App extends Application {
     public static boolean swapMode = false;
     private static Plateau plateau;
     public VBox scoreVBox;
+    public static Stage __stage;
 
     @Override
     public void start(Stage stage) {
+        __stage = stage;
         alerte = new Label();
         alerte.setFont(Font.font("Verdana", 16));
         alerte.setStyle("-fx-font-weight: bold");
@@ -323,7 +328,30 @@ public class App extends Application {
     public static void paireTrouvé(VBox vbox){
        scores.get(currentJoueurIndex).addScore(1);
        //mettre à jour l'affichage du score pour ce joueur
-       //joueurSuivant(vbox); 
+       
+       int cartesRestante = 0;
+       for(int ligne = 0; ligne < plateau.mLigne; ligne++)
+       {
+           for(int colonne = 0; colonne < plateau.mColumn; colonne++)
+           {
+               if(!plateau.cartes[ligne][colonne].supprimer)
+                   cartesRestante++;
+           }
+       }
+       
+       if(cartesRestante == 0)
+       {
+           Alert alert = new Alert(AlertType.INFORMATION);
+           alert.setTitle("Partie terminer !");
+           alert.setHeaderText(scores.get(currentJoueurIndex).getName() + " à gagner !");
+           alert.setContentText("Félicitations !");
+           alert.showAndWait().ifPresent(rs -> {
+               if (rs == ButtonType.OK) {
+                    __stage.close();
+               }
+           });
+           return;
+       }
     }
 
     public static void paireNonTrouvé(VBox vbox){

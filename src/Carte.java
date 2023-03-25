@@ -12,6 +12,8 @@ public class Carte extends Button {
     private static CarteBackground arriere = new CarteBackground("arriere.png");
     public         CarteBackground image   = null;
 
+    public boolean supprimer = false;
+
     public Carte(String arg, int val)
     {
         super(arg);
@@ -78,6 +80,7 @@ public class Carte extends Button {
 
     public void supprimer()
     {
+        this.supprimer = true;
         this.setOpacity(0);
     }
 

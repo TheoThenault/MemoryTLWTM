@@ -7,7 +7,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 public class Plateau extends TilePane{
-    private Carte cartes[][];
+    public Carte cartes[][];
     private EventHandler<MouseEvent> clickHandler;
 
     private VBox scoreVBox = new VBox();
@@ -100,6 +100,9 @@ public class Plateau extends TilePane{
             @Override
             public void handle(MouseEvent arg0) {
                 Carte c = (Carte)arg0.getSource();
+
+                if(c.supprimer)
+                    return;
 
                 if(playerChanged)
                 {
