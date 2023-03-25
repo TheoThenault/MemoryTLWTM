@@ -102,6 +102,7 @@ public class App extends Application {
 //Gestion du bouton choisir image
 
         btnChoisirImages.setOnAction(e-> {
+            alerte.setText("");
             choisirImages();
         });
 
@@ -186,7 +187,7 @@ public class App extends Application {
 
 
             if(nbJoueur == 1){//Si 1 joueur alors ne doit pas y avoir de bouton pour changer de joueur
-                btnProchainJoueur.setVisible(false);
+                btnProchainJoueur.setText("Tour suivant");
             }
 
             btnHbox.getChildren().addAll(btnProchainJoueur, btnQuitte);        
@@ -386,6 +387,12 @@ public class App extends Application {
 
         // Afficher la fenêtre de choix de fichier
         fichierChoisi = fileChooser.showOpenMultipleDialog(new Stage());
+
+        /*
+        for (File file : fichierChoisi) {
+            System.out.println(file.getName());
+        }
+        */
 
         // Récupérer le chemin des images sélectionnées
         
