@@ -1,10 +1,13 @@
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 public class Plateau extends TilePane{
     private Carte cartes[][];
     private EventHandler<MouseEvent> clickHandler;
+
+    private VBox scoreVBox = new VBox();
 
     private Carte premiereCarte = null;
     private Carte deuxiemeCarte = null;
@@ -14,9 +17,11 @@ public class Plateau extends TilePane{
         this(5, 6);
     }
 
-    public Plateau(int lines, int columns)
+    public Plateau(int lines, int columns, VBox vBoxScore)
     {
         super();
+
+        scoreVBox = vBoxScore;
 
         this.setHgap(2);
         this.setVgap(2);
@@ -39,6 +44,9 @@ public class Plateau extends TilePane{
         }
     }
 
+    public Plateau(int i, int j) {
+    }
+
     private void initClickHandler()
     {
         clickHandler = new EventHandler<MouseEvent>() {
@@ -46,23 +54,26 @@ public class Plateau extends TilePane{
             @Override
             public void handle(MouseEvent arg0) {
                 Carte c = (Carte)arg0.getSource();
-                
+
                 if(premiereCarte == null)
                 {
                     premiereCarte = c;
-                    premiereCarte.select();                
+                    premiereCarte.select();
                 }else{
                     if(deuxiemeCarte == null)
                     {
                         if(c != premiereCarte)
                         {
                             deuxiemeCarte = c;
-                            deuxiemeCarte.select();  
+                            deuxiemeCarte.select();
                             if(c.valeur == premiereCarte.valeur)
                             {
                                 // TODO GAGNER DES POINTS
+                                App.paireTrouvé(scoreVBox);
                                 c.supprimer();
                                 premiereCarte.supprimer();
+                            }else{
+                                App.paireNonTrouvé(scoreVBox);
                             }
                         }
                     }else{
