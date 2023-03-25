@@ -6,9 +6,6 @@ public class Plateau extends TilePane{
     private Carte cartes[][];
     private EventHandler<MouseEvent> clickHandler;
 
-    private int lignes   = 5;
-    private int colonnes = 6;
-
     private Carte premiereCarte = null;
     private Carte deuxiemeCarte = null;
 
@@ -20,8 +17,6 @@ public class Plateau extends TilePane{
     public Plateau(int lines, int columns)
     {
         super();
-        lignes = lines;
-        colonnes = columns;
 
         this.setHgap(2);
         this.setVgap(2);
