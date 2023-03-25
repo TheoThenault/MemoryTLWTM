@@ -1,3 +1,6 @@
+import java.io.File;
+import java.util.List;
+
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
@@ -20,7 +23,7 @@ public class Plateau extends TilePane{
         this(5, 6);
     }
 
-    public Plateau(int lines, int columns, VBox vBoxScore)
+    public Plateau(int lines, int columns, VBox vBoxScore, List<File> fichierchoisi)
     {
         super();
         mLigne = lines;
@@ -63,7 +66,12 @@ public class Plateau extends TilePane{
             cartes[ligne] = new Carte[columns];
             for(int colonne = 0; colonne < columns; colonne++)
             {
-                cartes[ligne][colonne] = new Carte(ligne + " " + colonne, valeurs[ligne][colonne]);
+                if(fichierchoisi != null){// si fichierChoisi existe alors l'utilisateur à choisi les images pour les cartes de la partie
+                    cartes[ligne][colonne] = new Carte(ligne + " " + colonne, valeurs[ligne][colonne], fichierchoisi);
+                }else{
+                    cartes[ligne][colonne] = new Carte(ligne + " " + colonne, valeurs[ligne][colonne]);
+                }
+                
                 cartes[ligne][colonne].setOnMouseClicked(clickHandler);
                 this.getChildren().add(cartes[ligne][colonne]);
             }
