@@ -9,7 +9,7 @@ public class Carte extends Button {
     public int valeur;
 
     private static CarteBackground arriere = new CarteBackground("arriere.png");
-    private        CarteBackground image   = null;
+    public         CarteBackground image   = null;
 
     public Carte(String arg, int val)
     {
