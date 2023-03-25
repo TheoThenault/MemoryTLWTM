@@ -51,23 +51,26 @@ public class Plateau extends TilePane{
             @Override
             public void handle(MouseEvent arg0) {
                 Carte c = (Carte)arg0.getSource();
-                
+
                 if(premiereCarte == null)
                 {
                     premiereCarte = c;
-                    premiereCarte.select();                
+                    premiereCarte.select();
                 }else{
                     if(deuxiemeCarte == null)
                     {
                         if(c != premiereCarte)
                         {
                             deuxiemeCarte = c;
-                            deuxiemeCarte.select();  
+                            deuxiemeCarte.select();
                             if(c.valeur == premiereCarte.valeur)
                             {
                                 // TODO GAGNER DES POINTS
+                                App.paireTrouvé();
                                 c.supprimer();
                                 premiereCarte.supprimer();
+                            }else{
+                                App.paireNonTrouvé();
                             }
                         }
                     }else{

@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-import javax.lang.model.element.Element;
-
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,10 +19,10 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     public final static int    BUTTON_SIZE = 50;
-    public int nbJoueur = 1;
+    public static int nbJoueur = 1;
     public int nbPaires ;
-    private int currentJoueurIndex = 0;
-    private ArrayList<Score> scores = new ArrayList<Score>(); 
+    private static int currentJoueurIndex = 0;
+    private static ArrayList<Score> scores = new ArrayList<Score>(); 
 
     @Override
     public void start(Stage stage) {
@@ -104,7 +104,17 @@ public class App extends Application {
                     return;
                 }
             }
-            
+
+
+            //scores contient la liste de tous les scores de la partie en cours
+            for(int i = 0; i < nbJoueur; i++){
+                scores.add(new Score(nomJoueurs[i].getText()));
+                
+            }
+            scores.get(0).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
+
+
+
             //lancement de partie une fois que tous les parametres sont entrés et valide
             
             Plateau plateau = new Plateau();
@@ -138,12 +148,7 @@ public class App extends Application {
             scoreVBox.setSpacing(10);
             scoreVBox.setPadding(new Insets(10));
 
-            //scores contient la liste de tous les scores de la partie en cours
-            for(int i = 0; i < nbJoueur; i++){
-                scores.add(new Score(nomJoueurs[i].getText()));
-                
-            }
-            scores.get(0).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
+            
             
             
             HBox btnHbox = new HBox();
@@ -219,7 +224,7 @@ public class App extends Application {
         launch();
     }
 
-    private void joueurSuivant(){
+    private static void joueurSuivant(){
         currentJoueurIndex ++;
         if (currentJoueurIndex >= nbJoueur){
             currentJoueurIndex = 0;
@@ -233,6 +238,16 @@ public class App extends Application {
         scores.get(currentJoueurIndex).setStyle("-fx-background-color: yellow; -fx-border-color: black;");
 
         System.out.println("Tour de " + scores.get(currentJoueurIndex).getName());
+    }
+
+    public static void paireTrouvé(){
+       scores.get(currentJoueurIndex).addScore(1);
+       //mettre à jour l'affichage du score pour ce joueur
+       joueurSuivant(); 
+    }
+
+    public static void paireNonTrouvé(){
+        joueurSuivant();
     }
 
 
