@@ -90,7 +90,10 @@ public class App extends Application {
         btnSwap.setOnAction(e ->{
             //échange
             swapMode = true;
-
+            plateau.premiereCarte.unselect();
+            plateau.deuxiemeCarte.unselect();
+            plateau.premiereCarte = null;
+            plateau.deuxiemeCarte = null;
             btnSwap.setVisible(false);
             plusPetitScore = false;
         });
@@ -251,6 +254,8 @@ public class App extends Application {
     }
 
     private static void joueurSuivant(VBox vbox){
+        App.swapMode = false;
+
         currentJoueurIndex ++;
         if (currentJoueurIndex >= nbJoueur){
             currentJoueurIndex = 0;

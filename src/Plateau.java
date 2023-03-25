@@ -108,8 +108,9 @@ public class Plateau extends TilePane{
 
                 if(premiereCarte == null)
                 {
-                    premiereCarte = c;   
-                    premiereCarte.select();
+                    premiereCarte = c;  
+                    if(!App.swapMode) 
+                        premiereCarte.select();
                 }else if(c != premiereCarte && deuxiemeCarte == null){ 
                     deuxiemeCarte = c;
                     deuxiemeCarte.select();
@@ -119,8 +120,6 @@ public class Plateau extends TilePane{
                         swap(premiereCarte, deuxiemeCarte);
                         premiereCarte.unselect();
                         deuxiemeCarte.unselect();
-                        premiereCarte = null;
-                        deuxiemeCarte = null;
                         App.swapMode = false;
                     }else{
                         if(premiereCarte.valeur == deuxiemeCarte.valeur)
